@@ -19,7 +19,7 @@ urlpatterns = [
     path('register/', views.register.as_view(), name='register'),
  # Role-based dashboards
     path('Admin-dashboard/', views.Admin_only_view, name='Admin_dashboard'),
-    path('librarian/', views.librarian.view, name='librarian_view'),
+    path('librarian/',  views.librarian_view, name='librarian_view'),
     path('member/', views.member_view, name='member_view'),
-    path('Admin-dashboard/', views.Admin_only_view, name='Admin_dashboard'),
+    path('Admin-dashboard/', views.admin_view, name='Admin_dashboard'),
 ]
