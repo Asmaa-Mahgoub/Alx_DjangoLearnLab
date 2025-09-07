@@ -26,4 +26,4 @@ class LibraryDetailView(DetailView):
         return context
     
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('books_author')
+        return super().get_queryset().prefetch_related('list_books')
