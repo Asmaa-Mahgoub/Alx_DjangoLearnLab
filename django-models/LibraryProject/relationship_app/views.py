@@ -16,7 +16,7 @@ class LibraryDetailView(DetailView):
     """Displays details for a specific library including all its books."""
     model = Library
     template_name = 'relationship_app/library_detail.html'  
-    
+    context_object_name = 'library'
 
     def get_context_data(self, **kwargs):
         """Add all books in this library to context."""
@@ -26,4 +26,4 @@ class LibraryDetailView(DetailView):
         return context
     
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('list_books')
+        return super().get_queryset().prefetch_related('books')
