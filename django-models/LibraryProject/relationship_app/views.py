@@ -1,14 +1,16 @@
 from django.shortcuts import render
-from .models import Book
-from .models import Library
 from django.views.generic.detail import DetailView
-
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
+from .models import Library
+from .models import Book
 from django.views.generic import CreateView
 from django.contrib.auth import login
-
+from django.contrib.auth.decorators import login
+from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 
@@ -72,3 +74,4 @@ def is_member(user):
 def member_view(request):
     # This view is only accessible to users with the 'Member' role
     return render(request, 'relationship_app/member_view.html')  
+
