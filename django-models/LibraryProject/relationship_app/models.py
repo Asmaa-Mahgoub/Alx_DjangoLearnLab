@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class Author(models.Model):
     name = models.CharField(max_length=255)
     
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 class Book(models.Model):
@@ -16,19 +16,19 @@ class Book(models.Model):
             ("can_change_book", "can_change_book"),
             ("can_delete_book", "can_delete_book"),
         ]
-    def _str_(self):
+    def __str__(self):
         return self.title
 
 class Library(models.Model):
     name = models.CharField(max_length=255)
     books = models.ManyToManyField(Book)
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 class Librarian(models.Model):
     name = models.CharField(max_length=255)
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 class UserProfile(models.Model):
