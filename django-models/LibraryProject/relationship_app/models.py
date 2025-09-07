@@ -1,8 +1,9 @@
 from django.db import models
 
-# Create your models here.
+
 from django.db import models
 
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class Author(models.Model):
     name= models.CharField(max_length =100)
@@ -30,3 +31,11 @@ class Librarian(models.Model):
 
     def __str__(self):
         return self.name 
+
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = (
+        ('Admin'),
+        ('library_member', 'Library Member'),
+        ('librarian', 'Librarian'),
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
