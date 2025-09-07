@@ -6,7 +6,7 @@ from .models import Book, Library
 #Create a function that lists all books stored in the database.
 #This view should render a simple text list of book titles and their authors.
 def list_books(request):
-   books= Book.objects.all
+   books= Book.objects.all()
    context = {'book_list': books}
    return render(request, 'books/list_books.html', context) 
 
