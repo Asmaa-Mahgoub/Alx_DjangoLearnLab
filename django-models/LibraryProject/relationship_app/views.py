@@ -24,3 +24,6 @@ class LibraryDetailView(DetailView):
         library = self.get_object()  # the current Library instance
         context['books'] = library.books.all()  # all books in this library
         return context
+    
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('books_author')
