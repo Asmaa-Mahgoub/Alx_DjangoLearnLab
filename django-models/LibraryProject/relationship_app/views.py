@@ -2,6 +2,11 @@ from django.shortcuts import render
 from .models import Book
 from .models import Library
 from django.views.generic.detail import DetailView
+
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+
 # Create your views here.
 
 #Create a function that lists all books stored in the database.
@@ -27,3 +32,8 @@ class LibraryDetailView(DetailView):
     
     def get_queryset(self):
         return super().get_queryset().prefetch_related('books')
+    
+class register(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')  
+    template_name = 'registration/register.html'
