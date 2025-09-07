@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
+from django.views.generic.detail import DetailView
 # Create your views here.
 
 #Create a function that lists all books stored in the database.
