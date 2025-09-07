@@ -8,7 +8,7 @@ from django.views.generic.detail import DetailView
 #This view should render a simple text list of book titles and their authors.
 def list_books(request):
    books= Book.objects.all()
-   context = {'book_list': books}
+   context = {'books': books}
    return render(request, 'relationship_app/list_books.html', context) 
 
 
