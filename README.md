@@ -1,5 +1,6 @@
-Permissions and Groups Setup Guide
-Overview
+Permissions and Groups Setup Guide Overview
+
+
 This Django application implements a comprehensive permission system using Django's built-in authentication system with custom permissions and groups.
 
 Custom Permissions
