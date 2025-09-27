@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import filters
 from .models import Book
+
 from .serializers import BookSerializer
 # Create your views here.
 
@@ -13,6 +16,7 @@ class ListView(generics.ListAPIView):
     permission_classes=[permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends=[
+        DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter
     ]
