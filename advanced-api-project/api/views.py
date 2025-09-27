@@ -7,7 +7,7 @@ from .serializers import BookSerializer
 # Create your views here.
 
 #Listing books
-class BookListView(generics.ListAPIView):
+class ListView(generics.ListAPIView):
     queryset=Book.objects.all()
     serializer_class=BookSerializer
     permission_classes=[permissions.IsAuthenticatedOrReadOnly]
@@ -41,7 +41,7 @@ class DeleteView(generics.DestroyAPIView):
     permission_classes=[permissions.IsAuthenticated]
 
 #Updating existing books
-class UpdateView(generics.UpdateAPIViewAPIView):
+class UpdateView(generics.UpdateAPIView):
     queryset=Book.objects.all()
     serializer_class=BookSerializer
     permission_classes=[permissions.IsAuthenticated]
