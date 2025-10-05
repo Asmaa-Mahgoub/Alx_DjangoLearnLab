@@ -158,3 +158,18 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author  # Only author can delete
 #User clicks “Delete” → confirmation page appears → confirms → post removed → redirected to post list.
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag = self.kwargs.get('tag')
+        #return Post.objects.filter(tag__name__in=[tag])
+        return Post.objects.filter(tags__name__icontains=[tag])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.kwargs.get('tag')
+        return context
