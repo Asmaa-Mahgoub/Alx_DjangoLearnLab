@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .forms import *
+from django.db.models import Q
 
 from django.views.generic import  ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -173,3 +174,10 @@ class PostByTagListView(ListView):
         context = super().get_context_data(**kwargs)
         context['tag'] = self.kwargs.get('tag')
         return context
+    
+    def search_posts(request):
+        query = request.GET.get('q')
+        results = Post.objects.filter(
+        Q(title__icontains=query) | Q(content__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct()
+        return render(request, 'blog/search_results.html', {'results': results})
