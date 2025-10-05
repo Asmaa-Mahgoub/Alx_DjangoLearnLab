@@ -82,23 +82,21 @@ class PostDetailView(DetailView):
         return context
 
 # Add a Comment
-@login_required
-def add_comment(request, post_id):
-    """Allows logged-in users to add a comment under a post."""
-    post = get_object_or_404(Post, id=post_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            messages.success(request, 'Comment added successfully!')
-            return redirect('post_detail', pk=post.id)
-    else:
-        form = CommentForm()
-    return render(request, 'blog/add_comment.html', {'form': form, 'post': post})
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/add_comment.html'
 
+    def form_valid(self, form):
+        post_id = self.kwargs['post_id']
+        post = get_object_or_404(Post, id=post_id)
+        form.instance.post = post
+        form.instance.author = self.request.user
+        messages.success(self.request, 'Comment added successfully!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.post.id})
 # Edit Comment
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Allows the author to edit their comment."""
