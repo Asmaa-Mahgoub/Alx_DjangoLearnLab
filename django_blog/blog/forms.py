@@ -14,5 +14,5 @@ class ProfileForm(forms.ModelForm):
     bio=forms.CharField(widget=forms.Textarea, required=False)
     profile_picture= forms.ImageField(required=False)
     model= User
-    fields=['first_name', 'last_name', 'email','bio','photo']
+    fields=['first_name', 'last_name', 'email','bio','profile_picture']
     
