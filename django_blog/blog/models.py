@@ -38,7 +38,9 @@ class Comment(models.Model):
 
 
 
-
+class Tag(models.Model):
+     name = models.CharField(max_length=50)
+     posts = models.ManyToManyField(Post)
 
 
  
