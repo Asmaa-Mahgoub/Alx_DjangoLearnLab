@@ -1,14 +1,14 @@
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .models import Posts, Comments
+from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 #from notifications.models import Notification
 
 # --- POST AND COMMENT VIEWS ---
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Posts.objects.all()
+    queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -18,7 +18,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comments.objects.all()
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -35,7 +35,7 @@ class FeedAPIView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         followed_users = user.following.all()  # Must exist in CustomUser model
-        return Posts.objects.filter(user__in=followed_users).order_by('-created_at')
+        return Post.objects.filter(user__in=followed_users).order_by('-created_at')
 
 
 # --- LIKE / UNLIKE VIEWS ---
