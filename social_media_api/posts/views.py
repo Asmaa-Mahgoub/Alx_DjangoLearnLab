@@ -1,52 +1,46 @@
-from rest_framework import viewsets, generics, permissions, status
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from .models import Post, Comment, Like
-from notifications.models import Notification
+from django.shortcuts import render
+from rest_framework import viewsets
+from .models import Posts, Comments
+from rest_framework.generics import ListAPIView
 from .serializers import PostSerializer, CommentSerializer
-#from notifications.models import Notification
+from rest_framework import permissions
 
-# --- POST AND COMMENT VIEWS ---
-
+# Create your views here.
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
+    queryset = Posts.objects.all()
+    # Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        # Automatically assign the current user as the author
-        serializer.save(user=self.request.user)
-
-
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
+    queryset = Comments.objects.all()
+    #  Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-# --- FEED VIEW ---
-
-class FeedAPIView(generics.ListAPIView):
+class FeedAPIView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        followed_users = user.following.all()  # Must exist in CustomUser model
-        return Post.objects.filter(user__in=followed_users).order_by('-created_at')
+        followed_users = user.following.all()
+        # ["Post.objects.filter(author__in=following_users).order_by"
+        return Posts.objects.filter(user__in=followed_users).order_by('-created_at')
 
-
-# --- LIKE / UNLIKE VIEWS ---
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from .models import Post, Like
+from notifications.models import Notification
 
 class LikePostView(generics.GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
-        like, created = Like.objects.get_or_create(user=request.user, post=post) 
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if created:
             Notification.objects.create(
@@ -56,19 +50,18 @@ class LikePostView(generics.GenericAPIView):
                 target=post
             )
             return Response({'detail': 'Post liked.'}, status=status.HTTP_201_CREATED)
-
-        return Response({'detail': 'You already liked this post.'}, status=status.HTTP_200_OK) 
-
+        else:
+            return Response({'detail': 'You already liked this post.'}, status=status.HTTP_200_OK)
 
 class UnlikePostView(generics.GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
+        # ["generics.get_object_or_404(Post, pk=pk)"]
         post = get_object_or_404(Post, pk=pk)
-        like = Like.objects.filter(user=request.user, post=post).first()
-
-        if like:
+        try:
+            like = Like.objects.get(user=request.user, post=post)
             like.delete()
             return Response({'detail': 'Post unliked.'}, status=status.HTTP_200_OK)
-
-        return Response({'detail': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+        except Like.DoesNotExist:
+            return Response({'detail': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
