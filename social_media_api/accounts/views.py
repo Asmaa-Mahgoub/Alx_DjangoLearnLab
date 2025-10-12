@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from .models import User
-from .serializers import UserSerializer
+from .serializers import CustomUserSerializer
 # Create your views here.
 
 class RegisterView(APIView):
@@ -44,7 +44,7 @@ class FollowUserView(generics.GenericAPIView):
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = CustomUserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
